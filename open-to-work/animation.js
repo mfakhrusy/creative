@@ -1,5 +1,8 @@
 const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
+const textInput = document.getElementById('textInput');
+const playBtn = document.getElementById('playBtn');
+const charCount = document.getElementById('charCount');
 
 // Canvas setup
 canvas.width = 900;
@@ -92,12 +95,404 @@ const LETTER_MAPS = {
     [0,0,0],
     [0,0,0],
   ],
+  // Lowercase letters
+  'o': [
+    [0,0,0,0,0],
+    [0,0,0,0,0],
+    [0,1,1,1,0],
+    [1,0,0,0,1],
+    [1,0,0,0,1],
+    [1,0,0,0,1],
+    [0,1,1,1,0],
+  ],
+  'p': [
+    [0,0,0,0,0],
+    [0,0,0,0,0],
+    [1,1,1,1,0],
+    [1,0,0,0,1],
+    [1,1,1,1,0],
+    [1,0,0,0,0],
+    [1,0,0,0,0],
+  ],
+  'e': [
+    [0,0,0,0,0],
+    [0,0,0,0,0],
+    [0,1,1,1,0],
+    [1,0,0,0,1],
+    [1,1,1,1,1],
+    [1,0,0,0,0],
+    [0,1,1,1,0],
+  ],
+  'n': [
+    [0,0,0,0,0],
+    [0,0,0,0,0],
+    [1,1,1,1,0],
+    [1,0,0,0,1],
+    [1,0,0,0,1],
+    [1,0,0,0,1],
+    [1,0,0,0,1],
+  ],
+  't': [
+    [0,0,0,0,0],
+    [0,0,1,0,0],
+    [1,1,1,1,1],
+    [0,0,1,0,0],
+    [0,0,1,0,0],
+    [0,0,1,0,0],
+    [0,0,0,1,0],
+  ],
+  'w': [
+    [0,0,0,0,0],
+    [0,0,0,0,0],
+    [1,0,0,0,1],
+    [1,0,0,0,1],
+    [1,0,1,0,1],
+    [1,0,1,0,1],
+    [0,1,0,1,0],
+  ],
+  'r': [
+    [0,0,0,0,0],
+    [0,0,0,0,0],
+    [1,0,1,1,0],
+    [1,1,0,0,1],
+    [1,0,0,0,0],
+    [1,0,0,0,0],
+    [1,0,0,0,0],
+  ],
+  'k': [
+    [0,0,0,0,0],
+    [1,0,0,0,0],
+    [1,0,0,1,0],
+    [1,0,1,0,0],
+    [1,1,0,0,0],
+    [1,0,1,0,0],
+    [1,0,0,1,0],
+  ],
+  'a': [
+    [0,0,0,0,0],
+    [0,0,0,0,0],
+    [0,1,1,1,0],
+    [0,0,0,0,1],
+    [0,1,1,1,1],
+    [1,0,0,0,1],
+    [0,1,1,1,1],
+  ],
+  'b': [
+    [1,0,0,0,0],
+    [1,0,0,0,0],
+    [1,1,1,1,0],
+    [1,0,0,0,1],
+    [1,0,0,0,1],
+    [1,0,0,0,1],
+    [1,1,1,1,0],
+  ],
+  'c': [
+    [0,0,0,0,0],
+    [0,0,0,0,0],
+    [0,1,1,1,0],
+    [1,0,0,0,0],
+    [1,0,0,0,0],
+    [1,0,0,0,0],
+    [0,1,1,1,0],
+  ],
+  'd': [
+    [0,0,0,0,1],
+    [0,0,0,0,1],
+    [0,1,1,1,1],
+    [1,0,0,0,1],
+    [1,0,0,0,1],
+    [1,0,0,0,1],
+    [0,1,1,1,1],
+  ],
+  'f': [
+    [0,0,0,0,0],
+    [0,0,1,1,0],
+    [0,1,0,0,0],
+    [1,1,1,0,0],
+    [0,1,0,0,0],
+    [0,1,0,0,0],
+    [0,1,0,0,0],
+  ],
+  'g': [
+    [0,0,0,0,0],
+    [0,0,0,0,0],
+    [0,1,1,1,1],
+    [1,0,0,0,1],
+    [0,1,1,1,1],
+    [0,0,0,0,1],
+    [0,1,1,1,0],
+  ],
+  'h': [
+    [1,0,0,0,0],
+    [1,0,0,0,0],
+    [1,1,1,1,0],
+    [1,0,0,0,1],
+    [1,0,0,0,1],
+    [1,0,0,0,1],
+    [1,0,0,0,1],
+  ],
+  'i': [
+    [0,0,0],
+    [0,1,0],
+    [0,0,0],
+    [0,1,0],
+    [0,1,0],
+    [0,1,0],
+    [0,1,0],
+  ],
+  'j': [
+    [0,0,0,0],
+    [0,0,0,1],
+    [0,0,0,0],
+    [0,0,0,1],
+    [0,0,0,1],
+    [1,0,0,1],
+    [0,1,1,0],
+  ],
+  'l': [
+    [0,1,0],
+    [0,1,0],
+    [0,1,0],
+    [0,1,0],
+    [0,1,0],
+    [0,1,0],
+    [0,1,0],
+  ],
+  'm': [
+    [0,0,0,0,0],
+    [0,0,0,0,0],
+    [1,1,0,1,0],
+    [1,0,1,0,1],
+    [1,0,1,0,1],
+    [1,0,1,0,1],
+    [1,0,1,0,1],
+  ],
+  's': [
+    [0,0,0,0,0],
+    [0,0,0,0,0],
+    [0,1,1,1,0],
+    [1,0,0,0,0],
+    [0,1,1,1,0],
+    [0,0,0,0,1],
+    [1,1,1,1,0],
+  ],
+  'u': [
+    [0,0,0,0,0],
+    [0,0,0,0,0],
+    [1,0,0,0,1],
+    [1,0,0,0,1],
+    [1,0,0,0,1],
+    [1,0,0,0,1],
+    [0,1,1,1,0],
+  ],
+  'v': [
+    [0,0,0,0,0],
+    [0,0,0,0,0],
+    [1,0,0,0,1],
+    [1,0,0,0,1],
+    [1,0,0,0,1],
+    [0,1,0,1,0],
+    [0,0,1,0,0],
+  ],
+  'x': [
+    [0,0,0,0,0],
+    [0,0,0,0,0],
+    [1,0,0,0,1],
+    [0,1,0,1,0],
+    [0,0,1,0,0],
+    [0,1,0,1,0],
+    [1,0,0,0,1],
+  ],
+  'y': [
+    [0,0,0,0,0],
+    [0,0,0,0,0],
+    [1,0,0,0,1],
+    [1,0,0,0,1],
+    [0,1,1,1,1],
+    [0,0,0,0,1],
+    [0,1,1,1,0],
+  ],
+  'z': [
+    [0,0,0,0,0],
+    [0,0,0,0,0],
+    [1,1,1,1,1],
+    [0,0,0,1,0],
+    [0,0,1,0,0],
+    [0,1,0,0,0],
+    [1,1,1,1,1],
+  ],
+  'A': [
+    [0,0,1,0,0],
+    [0,1,0,1,0],
+    [1,0,0,0,1],
+    [1,1,1,1,1],
+    [1,0,0,0,1],
+    [1,0,0,0,1],
+    [1,0,0,0,1],
+  ],
+  'B': [
+    [1,1,1,1,0],
+    [1,0,0,0,1],
+    [1,0,0,0,1],
+    [1,1,1,1,0],
+    [1,0,0,0,1],
+    [1,0,0,0,1],
+    [1,1,1,1,0],
+  ],
+  'C': [
+    [0,1,1,1,0],
+    [1,0,0,0,1],
+    [1,0,0,0,0],
+    [1,0,0,0,0],
+    [1,0,0,0,0],
+    [1,0,0,0,1],
+    [0,1,1,1,0],
+  ],
+  'D': [
+    [1,1,1,1,0],
+    [1,0,0,0,1],
+    [1,0,0,0,1],
+    [1,0,0,0,1],
+    [1,0,0,0,1],
+    [1,0,0,0,1],
+    [1,1,1,1,0],
+  ],
+  'F': [
+    [1,1,1,1,1],
+    [1,0,0,0,0],
+    [1,0,0,0,0],
+    [1,1,1,1,0],
+    [1,0,0,0,0],
+    [1,0,0,0,0],
+    [1,0,0,0,0],
+  ],
+  'G': [
+    [0,1,1,1,0],
+    [1,0,0,0,1],
+    [1,0,0,0,0],
+    [1,0,1,1,1],
+    [1,0,0,0,1],
+    [1,0,0,0,1],
+    [0,1,1,1,0],
+  ],
+  'H': [
+    [1,0,0,0,1],
+    [1,0,0,0,1],
+    [1,0,0,0,1],
+    [1,1,1,1,1],
+    [1,0,0,0,1],
+    [1,0,0,0,1],
+    [1,0,0,0,1],
+  ],
+  'I': [
+    [1,1,1],
+    [0,1,0],
+    [0,1,0],
+    [0,1,0],
+    [0,1,0],
+    [0,1,0],
+    [1,1,1],
+  ],
+  'J': [
+    [0,0,1,1,1],
+    [0,0,0,1,0],
+    [0,0,0,1,0],
+    [0,0,0,1,0],
+    [1,0,0,1,0],
+    [1,0,0,1,0],
+    [0,1,1,0,0],
+  ],
+  'L': [
+    [1,0,0,0,0],
+    [1,0,0,0,0],
+    [1,0,0,0,0],
+    [1,0,0,0,0],
+    [1,0,0,0,0],
+    [1,0,0,0,0],
+    [1,1,1,1,1],
+  ],
+  'M': [
+    [1,0,0,0,1],
+    [1,1,0,1,1],
+    [1,0,1,0,1],
+    [1,0,0,0,1],
+    [1,0,0,0,1],
+    [1,0,0,0,1],
+    [1,0,0,0,1],
+  ],
+  'Q': [
+    [0,1,1,1,0],
+    [1,0,0,0,1],
+    [1,0,0,0,1],
+    [1,0,0,0,1],
+    [1,0,1,0,1],
+    [1,0,0,1,0],
+    [0,1,1,0,1],
+  ],
+  'S': [
+    [0,1,1,1,0],
+    [1,0,0,0,1],
+    [1,0,0,0,0],
+    [0,1,1,1,0],
+    [0,0,0,0,1],
+    [1,0,0,0,1],
+    [0,1,1,1,0],
+  ],
+  'U': [
+    [1,0,0,0,1],
+    [1,0,0,0,1],
+    [1,0,0,0,1],
+    [1,0,0,0,1],
+    [1,0,0,0,1],
+    [1,0,0,0,1],
+    [0,1,1,1,0],
+  ],
+  'V': [
+    [1,0,0,0,1],
+    [1,0,0,0,1],
+    [1,0,0,0,1],
+    [1,0,0,0,1],
+    [1,0,0,0,1],
+    [0,1,0,1,0],
+    [0,0,1,0,0],
+  ],
+  'X': [
+    [1,0,0,0,1],
+    [0,1,0,1,0],
+    [0,0,1,0,0],
+    [0,0,1,0,0],
+    [0,0,1,0,0],
+    [0,1,0,1,0],
+    [1,0,0,0,1],
+  ],
+  'Y': [
+    [1,0,0,0,1],
+    [0,1,0,1,0],
+    [0,0,1,0,0],
+    [0,0,1,0,0],
+    [0,0,1,0,0],
+    [0,0,1,0,0],
+    [0,0,1,0,0],
+  ],
+  'Z': [
+    [1,1,1,1,1],
+    [0,0,0,0,1],
+    [0,0,0,1,0],
+    [0,0,1,0,0],
+    [0,1,0,0,0],
+    [1,0,0,0,0],
+    [1,1,1,1,1],
+  ],
 };
 
-const TEXT = "OPEN TO WORK";
+let TEXT = "OPEN TO WORK";
 const BRICK_SIZE = 10;
 const BRICK_GAP = 2;
 const LETTER_GAP = 15;
+
+let bricks = [];
+let startTime = null;
+let animationId = null;
 
 class Brick {
   constructor(targetX, targetY, color, delay) {
@@ -179,56 +574,62 @@ class Brick {
   }
 }
 
-// Calculate total width first to center the text
-let totalWidth = 0;
-for (const char of TEXT) {
-  const letterMap = LETTER_MAPS[char];
-  if (!letterMap) continue;
-  totalWidth += letterMap[0].length * (BRICK_SIZE + BRICK_GAP) + LETTER_GAP;
-}
-totalWidth -= LETTER_GAP; // Remove trailing gap
+function createBricks(text) {
+  bricks = [];
+  
+  // Calculate total width first to center the text
+  let totalWidth = 0;
+  for (const char of text) {
+    const letterMap = LETTER_MAPS[char];
+    if (!letterMap) continue;
+    totalWidth += letterMap[0].length * (BRICK_SIZE + BRICK_GAP) + LETTER_GAP;
+  }
+  totalWidth -= LETTER_GAP; // Remove trailing gap
 
-// Create bricks for all letters
-const bricks = [];
-let offsetX = (canvas.width - totalWidth) / 2;
-let letterDelay = 0;
-const LETTER_DURATION = 350; // Overlap: next letter starts while previous is still dropping
+  let offsetX = (canvas.width - totalWidth) / 2;
+  let letterDelay = 0;
+  const LETTER_DURATION = 350; // Overlap: next letter starts while previous is still dropping
 
-for (const char of TEXT) {
-  const letterMap = LETTER_MAPS[char];
-  if (!letterMap) continue;
-  
-  const letterColor = COLORS[Math.floor(Math.random() * COLORS.length)];
-  
-  // Build from bottom up - bottom row drops first, then rows above
-  const totalRows = letterMap.length;
-  
-  for (let row = totalRows - 1; row >= 0; row--) {
-    for (let col = 0; col < letterMap[row].length; col++) {
-      if (letterMap[row][col] === 1) {
-        const x = offsetX + col * (BRICK_SIZE + BRICK_GAP);
-        const y = 150 + row * (BRICK_SIZE + BRICK_GAP);
-        // Bottom rows (higher row index) drop first
-        const rowFromBottom = totalRows - 1 - row;
-        const delay = letterDelay + (rowFromBottom * 60) + (col * 15) + Math.random() * 20;
-        bricks.push(new Brick(x, y, letterColor, delay));
+  for (const char of text) {
+    const letterMap = LETTER_MAPS[char];
+    if (!letterMap) continue;
+    
+    const letterColor = COLORS[Math.floor(Math.random() * COLORS.length)];
+    
+    // Build from bottom up - bottom row drops first, then rows above
+    const totalRows = letterMap.length;
+    
+    for (let row = totalRows - 1; row >= 0; row--) {
+      for (let col = 0; col < letterMap[row].length; col++) {
+        if (letterMap[row][col] === 1) {
+          const x = offsetX + col * (BRICK_SIZE + BRICK_GAP);
+          const y = 150 + row * (BRICK_SIZE + BRICK_GAP);
+          // Bottom rows (higher row index) drop first
+          const rowFromBottom = totalRows - 1 - row;
+          const delay = letterDelay + (rowFromBottom * 60) + (col * 15) + Math.random() * 20;
+          bricks.push(new Brick(x, y, letterColor, delay));
+        }
       }
     }
+    
+    offsetX += letterMap[0].length * (BRICK_SIZE + BRICK_GAP) + LETTER_GAP;
+    
+    // Only add delay for non-space characters
+    if (char !== ' ') {
+      letterDelay += LETTER_DURATION;
+    } else {
+      letterDelay += 200; // Smaller pause for spaces
+    }
   }
-  
-  offsetX += letterMap[0].length * (BRICK_SIZE + BRICK_GAP) + LETTER_GAP;
-  
-  // Only add delay for non-space characters
-  if (char !== ' ') {
-    letterDelay += LETTER_DURATION;
-  } else {
-    letterDelay += 200; // Smaller pause for spaces
-  }
+}
+
+function startAnimation(text) {
+  TEXT = text;
+  startTime = null;
+  createBricks(text);
 }
 
 // Animation loop
-let startTime = null;
-
 function animate(timestamp) {
   if (!startTime) startTime = timestamp;
   const elapsed = timestamp - startTime;
@@ -243,25 +644,41 @@ function animate(timestamp) {
     brick.draw(ctx);
   }
 
-  // Check if all settled for replay
-  const allSettled = bricks.every(b => b.settled);
-  if (allSettled && elapsed > 5000) {
-    // Reset after a pause
-    setTimeout(() => {
-      startTime = null;
-      for (const brick of bricks) {
-        brick.y = -50 - Math.random() * 300;
-        brick.x = brick.targetX + (Math.random() - 0.5) * 50;
-        brick.velocity = 0;
-        brick.settled = false;
-        brick.started = false;
-        brick.rotation = Math.random() * Math.PI * 2;
-        brick.rotationSpeed = (Math.random() - 0.5) * 0.2;
-      }
-    }, 2000);
-  }
-
-  requestAnimationFrame(animate);
+  animationId = requestAnimationFrame(animate);
 }
 
+// Only allow alphabet and space
+function sanitizeInput(value) {
+  return value.replace(/[^a-zA-Z ]/g, '');
+}
+
+// Event listeners
+textInput.addEventListener('input', (e) => {
+  const sanitized = sanitizeInput(textInput.value);
+  if (sanitized !== textInput.value) {
+    textInput.value = sanitized;
+    textInput.style.animation = 'shake 0.3s';
+    setTimeout(() => textInput.style.animation = '', 300);
+  }
+  charCount.textContent = textInput.value.length;
+});
+
+playBtn.addEventListener('click', () => {
+  const text = textInput.value.trim();
+  if (text.length > 0) {
+    startAnimation(text);
+  }
+});
+
+textInput.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') {
+    const text = textInput.value.trim();
+    if (text.length > 0) {
+      startAnimation(text);
+    }
+  }
+});
+
+// Initial animation
+startAnimation(TEXT);
 requestAnimationFrame(animate);
