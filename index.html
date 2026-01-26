@@ -82,6 +82,20 @@
       font-size: 0.9rem;
       line-height: 1.5;
     }
+    footer {
+      margin-top: 60px;
+      text-align: center;
+      padding: 20px;
+    }
+    footer a {
+      color: #888;
+      text-decoration: none;
+      font-size: 0.9rem;
+      transition: color 0.2s;
+    }
+    footer a:hover {
+      color: #fff;
+    }
     
     @media (max-width: 600px) {
       body {
@@ -122,5 +136,11 @@
       </div>
     </a>
   </main>
+  <footer id="footer"></footer>
+  <script>
+    const host = window.location.hostname;
+    const mainSite = host.includes('fakhrusy.com') ? 'fakhrusy.com' : 'fahru.me';
+    document.getElementById('footer').innerHTML = `<a href="https://${mainSite}">${mainSite}</a>`;
+  </script>
 </body>
 </html>

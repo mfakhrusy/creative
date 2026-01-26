@@ -80,6 +80,38 @@
       25% { transform: translateX(-4px); }
       75% { transform: translateX(4px); }
     }
+    .back-btn {
+      position: fixed;
+      top: 16px;
+      left: 16px;
+      color: rgba(255, 255, 255, 0.5);
+      text-decoration: none;
+      font-size: 0.9rem;
+      padding: 8px 12px;
+      border-radius: 6px;
+      background: rgba(255, 255, 255, 0.1);
+      transition: all 0.2s;
+    }
+    .back-btn:hover {
+      background: rgba(255, 255, 255, 0.2);
+      color: #fff;
+    }
+    footer {
+      position: fixed;
+      bottom: 16px;
+      left: 0;
+      right: 0;
+      text-align: center;
+    }
+    footer a {
+      color: rgba(255, 255, 255, 0.4);
+      text-decoration: none;
+      font-size: 0.85rem;
+      transition: color 0.2s;
+    }
+    footer a:hover {
+      color: #fff;
+    }
     @media (max-width: 500px) {
       body {
         padding: 16px;
@@ -111,6 +143,7 @@
   </style>
 </head>
 <body>
+  <a href="/" class="back-btn">← Back</a>
   <div class="controls">
     <div class="input-wrapper">
       <input type="text" id="textInput" value="OPEN TO WORK" maxlength="12" placeholder="Enter text...">
@@ -119,6 +152,12 @@
     <button id="playBtn">▶ Animate</button>
   </div>
   <canvas id="canvas"></canvas>
+  <footer id="footer"></footer>
+  <script>
+    const host = window.location.hostname;
+    const mainSite = host.includes('fakhrusy.com') ? 'fakhrusy.com' : 'fahru.me';
+    document.getElementById('footer').innerHTML = `<a href="https://${mainSite}">${mainSite}</a>`;
+  </script>
   <script src="animation.js"></script>
 </body>
 </html>
