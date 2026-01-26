@@ -179,9 +179,18 @@ class Brick {
   }
 }
 
+// Calculate total width first to center the text
+let totalWidth = 0;
+for (const char of TEXT) {
+  const letterMap = LETTER_MAPS[char];
+  if (!letterMap) continue;
+  totalWidth += letterMap[0].length * (BRICK_SIZE + BRICK_GAP) + LETTER_GAP;
+}
+totalWidth -= LETTER_GAP; // Remove trailing gap
+
 // Create bricks for all letters
 const bricks = [];
-let offsetX = 50;
+let offsetX = (canvas.width - totalWidth) / 2;
 let letterDelay = 0;
 const LETTER_DURATION = 350; // Overlap: next letter starts while previous is still dropping
 
@@ -191,18 +200,18 @@ for (const char of TEXT) {
   
   const letterColor = COLORS[Math.floor(Math.random() * COLORS.length)];
   
-  // Count bricks in this letter for staggering within the letter
-  let brickIndex = 0;
+  // Build from bottom up - bottom row drops first, then rows above
+  const totalRows = letterMap.length;
   
-  for (let row = 0; row < letterMap.length; row++) {
+  for (let row = totalRows - 1; row >= 0; row--) {
     for (let col = 0; col < letterMap[row].length; col++) {
       if (letterMap[row][col] === 1) {
         const x = offsetX + col * (BRICK_SIZE + BRICK_GAP);
         const y = 150 + row * (BRICK_SIZE + BRICK_GAP);
-        // Stagger bricks within the letter, but all start after previous letter
-        const delay = letterDelay + (brickIndex * 20) + Math.random() * 30;
+        // Bottom rows (higher row index) drop first
+        const rowFromBottom = totalRows - 1 - row;
+        const delay = letterDelay + (rowFromBottom * 60) + (col * 15) + Math.random() * 20;
         bricks.push(new Brick(x, y, letterColor, delay));
-        brickIndex++;
       }
     }
   }
