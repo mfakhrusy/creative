@@ -1,0 +1,275 @@
+:root {
+  --room-size: 400px;
+  --inner-size: 120px;
+  --rotation-duration: 20s;
+  
+  --primary: #1a1a2e;
+  --secondary: #16213e;
+  --dark: #0f0f1a;
+  --accent: rgba(56, 189, 248, 0.15);
+  --grid-color: rgba(56, 189, 248, 0.08);
+  
+  --inner-primary: rgba(248, 113, 113, 0.3);
+  --inner-accent: rgba(248, 113, 113, 0.6);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: #0a0a0f;
+  overflow: hidden;
+  font-family: system-ui, -apple-system, sans-serif;
+}
+
+.scene {
+  perspective: 800px;
+  perspective-origin: 50% 50%;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.room {
+  position: relative;
+  width: var(--room-size);
+  height: var(--room-size);
+  transform-style: preserve-3d;
+  animation: rotate var(--rotation-duration) linear infinite;
+}
+
+.room.paused {
+  animation-play-state: paused;
+}
+
+@keyframes rotate {
+  0% {
+    transform: rotateX(0deg) rotateY(0deg);
+  }
+  25% {
+    transform: rotateX(15deg) rotateY(90deg);
+  }
+  50% {
+    transform: rotateX(0deg) rotateY(180deg);
+  }
+  75% {
+    transform: rotateX(-15deg) rotateY(270deg);
+  }
+  100% {
+    transform: rotateX(0deg) rotateY(360deg);
+  }
+}
+
+.wall {
+  position: absolute;
+  width: var(--room-size);
+  height: var(--room-size);
+  backface-visibility: visible;
+  border: 1px solid var(--accent);
+  box-shadow: inset 0 0 80px rgba(0, 0, 0, 0.5);
+  transition: opacity 0.5s ease;
+}
+
+.wall.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.wall-content {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.wall-label {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: rgba(56, 189, 248, 0.4);
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+}
+
+/* Back wall */
+.wall.back {
+  transform: translateZ(calc(var(--room-size) / -2));
+  background: 
+    linear-gradient(var(--grid-color) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-color) 1px, transparent 1px),
+    linear-gradient(180deg, var(--dark) 0%, var(--primary) 50%, var(--secondary) 100%);
+  background-size: 40px 40px, 40px 40px, 100% 100%;
+}
+
+/* Front wall */
+.wall.front {
+  transform: translateZ(calc(var(--room-size) / 2)) rotateY(180deg);
+  background: 
+    linear-gradient(var(--grid-color) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-color) 1px, transparent 1px),
+    linear-gradient(180deg, var(--secondary) 0%, var(--primary) 50%, var(--dark) 100%);
+  background-size: 40px 40px, 40px 40px, 100% 100%;
+}
+
+/* Left wall */
+.wall.left {
+  transform: translateX(calc(var(--room-size) / -2)) rotateY(90deg);
+  background: 
+    linear-gradient(var(--grid-color) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-color) 1px, transparent 1px),
+    linear-gradient(90deg, var(--dark) 0%, var(--primary) 100%);
+  background-size: 40px 40px, 40px 40px, 100% 100%;
+}
+
+/* Right wall */
+.wall.right {
+  transform: translateX(calc(var(--room-size) / 2)) rotateY(-90deg);
+  background: 
+    linear-gradient(var(--grid-color) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-color) 1px, transparent 1px),
+    linear-gradient(-90deg, var(--dark) 0%, var(--primary) 100%);
+  background-size: 40px 40px, 40px 40px, 100% 100%;
+}
+
+/* Floor */
+.wall.floor {
+  transform: translateY(calc(var(--room-size) / 2)) rotateX(90deg);
+  background: 
+    linear-gradient(var(--accent) 1px, transparent 1px),
+    linear-gradient(90deg, var(--accent) 1px, transparent 1px),
+    linear-gradient(180deg, var(--primary) 0%, var(--secondary) 50%, var(--primary) 100%);
+  background-size: 40px 40px, 40px 40px, 100% 100%;
+}
+
+/* Ceiling */
+.wall.ceiling {
+  transform: translateY(calc(var(--room-size) / -2)) rotateX(-90deg);
+  background: 
+    linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(180deg, var(--dark) 0%, var(--primary) 100%);
+  background-size: 60px 60px, 60px 60px, 100% 100%;
+}
+
+/* Inner cube (tesseract) */
+.inner-cube {
+  position: absolute;
+  width: var(--inner-size);
+  height: var(--inner-size);
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  transform-style: preserve-3d;
+  animation: inner-rotate var(--rotation-duration) linear infinite reverse;
+}
+
+@keyframes inner-rotate {
+  0% {
+    transform: translate(-50%, -50%) rotateX(0deg) rotateY(0deg) rotateZ(0deg);
+  }
+  100% {
+    transform: translate(-50%, -50%) rotateX(360deg) rotateY(360deg) rotateZ(360deg);
+  }
+}
+
+.inner-face {
+  position: absolute;
+  width: var(--inner-size);
+  height: var(--inner-size);
+  background: var(--inner-primary);
+  border: 2px solid var(--inner-accent);
+  box-shadow: 
+    inset 0 0 30px rgba(248, 113, 113, 0.2),
+    0 0 20px rgba(248, 113, 113, 0.1);
+}
+
+.inner-face.back {
+  transform: translateZ(calc(var(--inner-size) / -2));
+}
+
+.inner-face.front {
+  transform: translateZ(calc(var(--inner-size) / 2));
+}
+
+.inner-face.left {
+  transform: translateX(calc(var(--inner-size) / -2)) rotateY(90deg);
+}
+
+.inner-face.right {
+  transform: translateX(calc(var(--inner-size) / 2)) rotateY(-90deg);
+}
+
+.inner-face.top {
+  transform: translateY(calc(var(--inner-size) / -2)) rotateX(90deg);
+}
+
+.inner-face.bottom {
+  transform: translateY(calc(var(--inner-size) / 2)) rotateX(-90deg);
+}
+
+/* Controls */
+.controls {
+  position: fixed;
+  bottom: 2rem;
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  background: rgba(20, 20, 35, 0.9);
+  padding: 1rem 1.5rem;
+  border-radius: 12px;
+  border: 1px solid rgba(56, 189, 248, 0.2);
+  backdrop-filter: blur(10px);
+  z-index: 10;
+  flex-wrap: wrap;
+  justify-content: center;
+  max-width: 90vw;
+}
+
+.controls button {
+  background: rgba(56, 189, 248, 0.2);
+  color: rgba(56, 189, 248, 0.9);
+  border: 1px solid rgba(56, 189, 248, 0.3);
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: all 0.2s ease;
+}
+
+.controls button:hover {
+  background: rgba(56, 189, 248, 0.3);
+}
+
+.controls button.active {
+  background: rgba(56, 189, 248, 0.5);
+  border-color: rgba(56, 189, 248, 0.7);
+}
+
+.controls label {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.controls input[type="range"] {
+  width: 80px;
+  accent-color: rgba(56, 189, 248, 0.8);
+}
+
+.divider {
+  width: 1px;
+  height: 24px;
+  background: rgba(56, 189, 248, 0.2);
+}

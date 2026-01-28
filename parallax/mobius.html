@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SVG Mobius Strip Parallax</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #0a0a0f;
+            height: 400vh; /* Make the page scrollable */
+            overflow-x: hidden;
+            font-family: monospace;
+        }
+
+        #canvas-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        svg {
+            width: 100%;
+            height: 100%;
+            max-width: 800px;
+            max-height: 800px;
+        }
+        
+        .instruction {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            color: rgba(255, 255, 255, 0.5);
+            pointer-events: none;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div id="canvas-container">
+        <svg id="mobius" viewBox="-600 -600 1200 1200" preserveAspectRatio="xMidYMid meet"></svg>
+    </div>
+    
+    <div class="instruction">
+        <p>SCROLL TO ROTATE</p>
+    </div>
+
+    <script>
+        const svg = document.getElementById('mobius');
+        
+        // Mobius strip parameters
+        // Increased R for "longer" loop, adjusted W
+        const R = 2.0; 
+        const W = 0.55; 
+        const uSteps = 100; // Smoother
+        
+        // State
+        let scrollProgress = 0;
+        
+        function to3D(u, v) {
+            const w = v * W;
+            // Parametric equations
+            // We can stretch it to look "longer" by scaling X or Y
+            // Let's stretch X to make it more oval/figure-8 like
+            const stretch = 1.5; 
+            
+            const x = (R + w * Math.cos(u/2)) * Math.cos(u) * stretch;
+            const y = (R + w * Math.cos(u/2)) * Math.sin(u);
+            const z = w * Math.sin(u/2);
+            
+            return {x, y, z};
+        }
+
+        function project(p, angleX, angleY) {
+            let x = p.x;
+            let y = p.y;
+            let z = p.z;
+
+            // Rotate around X
+            let y1 = y * Math.cos(angleX) - z * Math.sin(angleX);
+            let z1 = y * Math.sin(angleX) + z * Math.cos(angleX);
+            y = y1;
+            z = z1;
+
+            // Rotate around Y
+            let x1 = x * Math.cos(angleY) + z * Math.sin(angleY);
+            let z2 = -x * Math.sin(angleY) + z * Math.cos(angleY);
+            x = x1;
+            z = z2;
+
+            // Perspective projection for better 3D effect
+            const fov = 4;
+            const scale = 150; // SVG coordinate scale
+            const distance = 5;
+            
+            const pFactor = fov / (distance - z);
+            const xProj = x * pFactor * scale;
+            const yProj = y * pFactor * scale;
+            
+            return { x: xProj, y: yProj, z: z, depth: z }; 
+        }
+
+        function render() {
+            // Clear SVG
+            while (svg.firstChild) {
+                svg.removeChild(svg.firstChild);
+            }
+
+            // Calculate rotation based on scroll
+            // Initial angle to show the "figure 8" twist nicely
+            // Rotated slightly on X and Y
+            const baseRotX = 0.6; 
+            const baseRotY = 0.3;
+            
+            // Scroll adds rotation "flows" along the strip
+            const stripFlowOffset = scrollProgress * Math.PI * 2;
+            
+            // Generate quads
+            const faces = [];
+            
+            for (let i = 0; i < uSteps; i++) {
+                let u1 = (i / uSteps) * Math.PI * 2;
+                let u2 = ((i + 1) / uSteps) * Math.PI * 2;
+                
+                // We actually want the GEOMETRY to stay put (mostly) and the texture to slide,
+                // OR we rotate the object.
+                // The user asked "every scroll, the mobius strip move in a way that showing it's a mobius strip"
+                // Sliding the text/color along the strip is good, but rotating the whole object is also good.
+                // Let's rotate the object itself to show structure.
+                
+                // Let's apply valid Mobius sliding: 
+                // The structure is static in parameter space? 
+                // If we add offset to 'u', the whole shape morphs if it's not symmetric?
+                // A standard Mobius is symmetric-ish.
+                // Let's add the offset to u to create the "traveling" effect along the path.
+                
+                const currentU1 = u1 + stripFlowOffset;
+                const currentU2 = u2 + stripFlowOffset;
+
+                const p1 = to3D(currentU1, -1);
+                const p2 = to3D(currentU2, -1);
+                const p3 = to3D(currentU2, 1);
+                const p4 = to3D(currentU1, 1);
+                
+                // Project
+                // We keep the view rotation somewhat static or slowly moving, 
+                // but the MAIN movement is the strip flowing.
+                const rotX = baseRotX + scrollProgress * 0.5;
+                const rotY = baseRotY + scrollProgress * 0.5;
+
+                const pp1 = project(p1, rotX, rotY);
+                const pp2 = project(p2, rotX, rotY);
+                const pp3 = project(p3, rotX, rotY);
+                const pp4 = project(p4, rotX, rotY);
+                
+                // Central Z for depth sorting
+                const avgZ = (pp1.z + pp2.z + pp3.z + pp4.z) / 4;
+                
+                faces.push({
+                    points: [pp1, pp2, pp3, pp4],
+                    z: avgZ,
+                    u: i // Use original index for static coloring pattern relative to the segment
+                });
+            }
+
+            // Painter's algorithm
+            faces.sort((a, b) => a.z - b.z);
+
+            faces.forEach(face => {
+                const pts = face.points.map(p => `${p.x.toFixed(2)},${p.y.toFixed(2)}`).join(' ');
+                const poly = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
+                poly.setAttribute("points", pts);
+                
+                // Coloring to match the "smooth" gradient look
+                // We iterate hue based on the segment index u
+                // But to make it look like it's MOVING, we should base hue on (u + offset)
+                // Let's use the scrollProgress to shift hue too
+                
+                const hue = ((face.u / uSteps) * 360 + scrollProgress * 360) % 360;
+                
+                poly.setAttribute("fill", `hsla(${hue}, 80%, 60%, 0.9)`);
+                poly.setAttribute("stroke", `hsla(${hue}, 80%, 70%, 0.4)`);
+                poly.setAttribute("stroke-width", "0.5"); // Finer stroke
+                
+                svg.appendChild(poly);
+            });
+        }
+
+        function update() {
+            const maxScroll = document.body.scrollHeight - window.innerHeight;
+            scrollProgress = window.scrollY / maxScroll;
+            render();
+            requestAnimationFrame(update);
+        }
+
+        update();
+        window.addEventListener('resize', render);
+    </script>
+</body>
+</html>

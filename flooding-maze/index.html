@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Flooding Maze</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { 
+      background: #0a0a0f; 
+      display: flex; 
+      flex-direction: column;
+      justify-content: center; 
+      align-items: center; 
+      min-height: 100vh;
+      font-family: system-ui, sans-serif;
+      gap: 20px;
+    }
+    .controls {
+      display: flex;
+      gap: 10px;
+    }
+    button {
+      background: #1a1a2e;
+      color: #fff;
+      border: 1px solid #333;
+      padding: 10px 20px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: background 0.2s, border-color 0.2s;
+    }
+    button:hover {
+      background: #2a2a4e;
+      border-color: #555;
+    }
+    #mazeContainer {
+      cursor: grab;
+    }
+    #mazeContainer.dragging {
+      cursor: grabbing;
+    }
+    canvas { 
+      display: block;
+    }
+    .info {
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      color: #666;
+      font-size: 12px;
+    }
+  </style>
+</head>
+<body>
+  <div class="controls">
+    <button id="regenerateBtn">Regenerate Maze</button>
+  </div>
+  <div id="mazeContainer">
+    <canvas id="mazeCanvas"></canvas>
+  </div>
+  <div class="info">Drag to move the maze • Flooding Maze</div>
+  <script src="maze.js"></script>
+</body>
+</html>

@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Parallax Shapes</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: #0a0a0f;
+      min-height: 300vh;
+      overflow-x: hidden;
+    }
+
+    .parallax-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100vh;
+      pointer-events: none;
+    }
+
+    .shape {
+      position: absolute;
+      border-radius: 50%;
+      opacity: 0.7;
+    }
+
+    .circle-1 {
+      width: 200px;
+      height: 200px;
+      background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+      top: 10%;
+      left: 15%;
+    }
+
+    .circle-2 {
+      width: 150px;
+      height: 150px;
+      background: linear-gradient(135deg, #74b9ff, #0984e3);
+      top: 30%;
+      right: 20%;
+    }
+
+    .circle-3 {
+      width: 100px;
+      height: 100px;
+      background: linear-gradient(135deg, #55efc4, #00b894);
+      top: 60%;
+      left: 40%;
+    }
+
+    .square {
+      width: 120px;
+      height: 120px;
+      background: linear-gradient(135deg, #a29bfe, #6c5ce7);
+      border-radius: 20px;
+      top: 50%;
+      left: 10%;
+    }
+
+    .triangle {
+      width: 0;
+      height: 0;
+      border-left: 80px solid transparent;
+      border-right: 80px solid transparent;
+      border-bottom: 140px solid #fdcb6e;
+      background: none;
+      border-radius: 0;
+      top: 20%;
+      right: 10%;
+      opacity: 0.8;
+    }
+
+    .ring {
+      width: 180px;
+      height: 180px;
+      background: transparent;
+      border: 15px solid #fd79a8;
+      top: 70%;
+      right: 25%;
+    }
+
+    .content {
+      position: relative;
+      z-index: 10;
+      padding: 100px 50px;
+      color: white;
+      font-family: system-ui, sans-serif;
+    }
+
+    .content h1 {
+      font-size: 4rem;
+      margin-bottom: 2rem;
+    }
+
+    .content p {
+      font-size: 1.5rem;
+      opacity: 0.8;
+      max-width: 600px;
+      line-height: 1.6;
+    }
+
+    .section {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="parallax-container">
+    <div class="shape circle-1" data-speed="0.2"></div>
+    <div class="shape circle-2" data-speed="0.4"></div>
+    <div class="shape circle-3" data-speed="0.6"></div>
+    <div class="shape square" data-speed="0.3"></div>
+    <div class="shape triangle" data-speed="0.5"></div>
+    <div class="shape ring" data-speed="0.25"></div>
+  </div>
+
+  <div class="content">
+    <div class="section">
+      <div>
+        <h1>Parallax Shapes</h1>
+        <p>Scroll down to see the shapes move at different speeds.</p>
+      </div>
+    </div>
+    <div class="section">
+      <div>
+        <h1>Keep Scrolling</h1>
+        <p>Each shape has a different parallax speed.</p>
+      </div>
+    </div>
+    <div class="section">
+      <div>
+        <h1>The End</h1>
+        <p>Try tweaking the data-speed values!</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const shapes = document.querySelectorAll('.shape');
+
+    window.addEventListener('scroll', () => {
+      const scrollY = window.scrollY;
+
+      shapes.forEach(shape => {
+        const speed = parseFloat(shape.dataset.speed);
+        const yOffset = scrollY * speed;
+        shape.style.transform = `translateY(${yOffset}px)`;
+      });
+    });
+  </script>
+</body>
+</html>

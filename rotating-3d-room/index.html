@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rotating 3D Room</title>
+  <link rel="stylesheet" href="style.css">
+  <script defer src="script.js"></script>
+</head>
+<body>
+  <div class="scene">
+    <div class="room">
+      <div class="wall back">
+        <div class="wall-content">
+          <span class="wall-label">BACK</span>
+        </div>
+      </div>
+      
+      <div class="wall front">
+        <div class="wall-content">
+          <span class="wall-label">FRONT</span>
+        </div>
+      </div>
+      
+      <div class="wall left">
+        <div class="wall-content">
+          <span class="wall-label">LEFT</span>
+        </div>
+      </div>
+      
+      <div class="wall right">
+        <div class="wall-content">
+          <span class="wall-label">RIGHT</span>
+        </div>
+      </div>
+      
+      <div class="wall floor">
+        <div class="wall-content">
+          <span class="wall-label">FLOOR</span>
+        </div>
+      </div>
+      
+      <div class="wall ceiling">
+        <div class="wall-content">
+          <span class="wall-label">CEILING</span>
+        </div>
+      </div>
+      
+      <!-- Inner floating cube -->
+      <div class="inner-cube">
+        <div class="inner-face back"></div>
+        <div class="inner-face front"></div>
+        <div class="inner-face left"></div>
+        <div class="inner-face right"></div>
+        <div class="inner-face top"></div>
+        <div class="inner-face bottom"></div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="controls">
+    <button id="toggle-rotation">Pause</button>
+    <label>
+      Speed: <input type="range" id="speed" min="5" max="60" value="20">
+    </label>
+    <div class="divider"></div>
+    <button data-wall="front">Front</button>
+    <button data-wall="back">Back</button>
+    <button data-wall="left">Left</button>
+    <button data-wall="right">Right</button>
+    <button data-wall="floor">Floor</button>
+    <button data-wall="ceiling">Ceiling</button>
+  </div>
+</body>
+</html>
